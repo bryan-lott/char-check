@@ -25,7 +25,7 @@
   (apply dissoc m s))
 
 (defn run-file
-  "Given a map of characters and a lazy sequence of lines, remove chars in the file
+  "Given a map of characters and a lazy sequence of lines, remove chars in the lines
   from the map of characters, ending if either characters is empty or we're out of lines."
   [characters lines]
   (loop [characters characters
@@ -39,10 +39,10 @@
   "Main function.  Opens the in-file and processes the file until all characters are found.
   Exits with number of characters not found."
   (with-open [r (clojure.java.io/reader in-file)]
-    (let [chars-remaining (run-file (str->test-map characters) (line-seq r))]
-      (when (seq chars-remaining)
-        (println "Characters not found in file:\n" (join (keys chars-remaining)))
-        (System/exit (count (keys chars-remaining))))
+    (let [chars-not-found (keys (run-file (str->test-map characters) (line-seq r)))]
+      (when (seq chars-not-found)
+        (println "Characters not found in file:\n" (join chars-not-found))
+        (System/exit (count chars-not-found)))
       (println "All characters (" characters ") found"))))
 
 
