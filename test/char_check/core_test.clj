@@ -9,7 +9,11 @@
             "B" nil
             "C" nil
             "D" nil
-            "E" nil}))))
+            "E" nil})))
+  (testing "Duplicate keys"
+    (is (= (str->test-map "AAB")
+           {"A" nil
+            "B" nil}))))
 
 (deftest test-process-line
   (testing "No repeating characters."
