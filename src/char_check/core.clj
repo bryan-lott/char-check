@@ -4,7 +4,8 @@
     [taoensso.timbre.appenders.core :as appenders]
     [clojure.tools.cli :refer [parse-opts]]
     [clojure.java.io :refer [as-file]]
-    [clojure.string :refer [split join]]))
+    [clojure.string :refer [split join]])
+  (:gen-class))
 
 
 (defn str->test-map
@@ -50,11 +51,11 @@
   "Main function.  Opens the in-file and processes the file until all characters are found.
   Exits with number of characters not found."
   (with-open [r (clojure.java.io/reader in-file)]
-    (let [chars-remaining (run-file (line-seq r))]
-      (when-not (empty? chars-remaining)
-        (println "Characters not found in file:\n" (keys chars-remaining))
+    (let [chars-remaining (run-file (str->test-map characters) (line-seq r))]
+      (when (seq chars-remaining)
+        (println "Characters not found in file:\n" (join (keys chars-remaining)))
         (System/exit (count (keys chars-remaining))))
-      (println "All characters (" (keys chars-remaining) ") found"))))
+      (println "All characters (" characters ") found"))))
 
 (defn -main
   "Entrypoint, parses arguments, exits with any errors, provides args to main."
