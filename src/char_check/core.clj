@@ -7,6 +7,11 @@
     [clojure.string :refer [split join]])
   (:gen-class))
 
+(defn exit
+  "Exits the program with a status code and message."
+  [status msg]
+  (println msg)
+  (System/exit status))
 
 (defn str->test-map
   "Converts a string of characters to a unique map with keys of each letter.
@@ -41,8 +46,7 @@
   (with-open [r (clojure.java.io/reader in-file)]
     (let [chars-not-found (keys (run-file (str->test-map characters) (line-seq r)))]
       (when (seq chars-not-found)
-        (println "Characters not found in file:\n" (join chars-not-found))
-        (System/exit (count chars-not-found)))
+        (exit (count chars-not-found) (str "Characters not found in file:\n" (join chars-not-found))))
       (println "All characters (" characters ") found"))))
 
 
