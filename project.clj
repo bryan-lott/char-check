@@ -9,4 +9,4 @@
   :main ^:skip-aot char-check.core
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Xms4g" "-Xmx4g" "-server"]}
-             :user {:dev [[com.jakemccrary/lein-test-refresh "0.12.0"]]}})
+             :dev {:plugins [[com.jakemccrary/lein-test-refresh "0.12.0"]]}})
