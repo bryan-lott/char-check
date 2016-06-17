@@ -6,7 +6,9 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [com.taoensso/timbre "4.0.1"]  ;; logging
                  [org.clojure/tools.cli "0.3.5"]]  ;; command line args
+  :target-path "target/%s"
   :main ^:skip-aot char-check.core
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Xms4g" "-Xmx4g" "-server"]}
-             :dev {:plugins [[com.jakemccrary/lein-test-refresh "0.12.0"]]}})
+             :dev {:plugins [[com.jakemccrary/lein-test-refresh "0.12.0"]
+                             [lein-kibit "0.1.2"]]}})
