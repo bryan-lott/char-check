@@ -54,6 +54,12 @@
     :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdefghijklmnopqrstuvwxyz"}))]
    ["-n" "--number" "Check for numbers [0-9]"
     :assoc-fn (fn [m k _] (merge-with str m {:characters "0123456789"}))]
+   ["-h" "--hex" "Check for hexidecimal numbers [0-9a-f]"
+    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
+   ["-p" "--punctuation" "Check for common punctuation [.,?!&-'\";:]"
+    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
+   ["-s" "--symbol" "Check for symbols [`~!@#$%^&_-+*/=(){}[]|\\:;\"'<,>.?}]"
+    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
    ["-f" "--file FILEPATH" "Location of the file under test."
     :default nil
     :parse-fn str
