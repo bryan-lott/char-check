@@ -3,14 +3,15 @@
     [taoensso.timbre :as log]
     [taoensso.timbre.appenders.core :as appenders]
     [clojure.tools.cli :refer [parse-opts]]
-    [clojure.java.io :refer [as-file]]))
+    [clojure.java.io :refer [as-file]]
+    [clojure.string :refer [split join]]))
 
 
 (defn str->test-map
   "Converts a string of characters to a unique map with keys of each letter.
   The values determine whether that particular character has been found."
   [s]
-  (zipmap (map str s) (repeat false)))
+  (zipmap (map str s) (repeat nil)))
 
 (def cli-options
   [["-u" "--upper" "Check for uppercase letters [A-Z]"
@@ -24,21 +25,42 @@
     :parse-fn str
     :validate [#(.exists (as-file %)) "File does not exist!"]]])
 
-(defn main [characters infile]
-  (with-open [r (clojure.java.io/reader in-file)]))
+(defn process-line
+  "Given a string, produce a set of strings."
+  [s]
+  (set (map str s)))
 
+(defn dissoc-from-test
+  "Given a map and a set, dissoc from the map all keys in the set."
+  [m s]
+  (apply dissoc m s))
 
+(defn run-file
+  "Given a map of characters and a lazy sequence of lines, remove chars in the file
+  from the map of characters, ending if either characters is empty or we're out of lines."
+  [characters lines]
+  (loop [characters characters
+         lines lines]
+    (if (or (empty? characters)
+            (empty? lines))
+      characters
+      (recur (dissoc-from-test characters (process-line (first lines))) (rest lines)))))
 
-(apply dissoc {"a" true "b" true "c" true} (map str "ab"))
-(map str"ab")
+(defn main [characters in-file]
+  "Main function.  Opens the in-file and processes the file until all characters are found.
+  Exits with number of characters not found."
+  (with-open [r (clojure.java.io/reader in-file)]
+    (let [chars-remaining (run-file (line-seq r))]
+      (when-not (empty? chars-remaining)
+        (println "Characters not found in file:\n" (keys chars-remaining))
+        (System/exit (count (keys chars-remaining))))
+      (println "All characters (" (keys chars-remaining) ") found"))))
+
 (defn -main
+  "Entrypoint, parses arguments, exits with any errors, provides args to main."
   [& args]
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
     (when errors
       (dorun (map println errors))
       (System/exit 1))
     (main (:characters options) (:file options))))
-
-
-
-(-main "-uln" "-f" "dev-resources/test-file.txt")
