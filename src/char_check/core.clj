@@ -14,18 +14,6 @@
   [s]
   (zipmap (map str s) (repeat nil)))
 
-(def cli-options
-  [["-u" "--upper" "Check for uppercase letters [A-Z]"
-    :assoc-fn (fn [m k _] (merge-with str m {:characters "ABCDEFGHIJKLMNOPQRSTUVWXYZ"}))]
-   ["-l" "--lower" "Check for lowercase letters [a-z]"
-    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdefghijklmnopqrstuvwxyz"}))]
-   ["-n" "--number" "Check for numbers [0-9]"
-    :assoc-fn (fn [m k _] (merge-with str m {:characters "0123456789"}))]
-   ["-f" "--file FILEPATH" "Location of the file under test."
-    :default nil
-    :parse-fn str
-    :validate [#(.exists (as-file %)) "File does not exist!"]]])
-
 (defn process-line
   "Given a string, produce a set of strings."
   [s]
@@ -56,6 +44,21 @@
         (println "Characters not found in file:\n" (join (keys chars-remaining)))
         (System/exit (count (keys chars-remaining))))
       (println "All characters (" characters ") found"))))
+
+
+
+(def cli-options
+  [["-u" "--upper" "Check for uppercase letters [A-Z]"
+    :assoc-fn (fn [m k _] (merge-with str m {:characters "ABCDEFGHIJKLMNOPQRSTUVWXYZ"}))]
+   ["-l" "--lower" "Check for lowercase letters [a-z]"
+    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdefghijklmnopqrstuvwxyz"}))]
+   ["-n" "--number" "Check for numbers [0-9]"
+    :assoc-fn (fn [m k _] (merge-with str m {:characters "0123456789"}))]
+   ["-f" "--file FILEPATH" "Location of the file under test."
+    :default nil
+    :parse-fn str
+    :validate [#(.exists (as-file %)) "File does not exist!"]]
+   ["-h" "--help"]])
 
 (defn -main
   "Entrypoint, parses arguments, exits with any errors, provides args to main."
