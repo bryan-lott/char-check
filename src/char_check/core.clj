@@ -58,12 +58,13 @@
     :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdefghijklmnopqrstuvwxyz"}))]
    ["-n" "--number" "Check for numbers [0-9]"
     :assoc-fn (fn [m k _] (merge-with str m {:characters "0123456789"}))]
-   ["-h" "--hex" "Check for hexidecimal numbers [0-9a-f]"
+   ["-6" "--hex" "Check for hexidecimal numbers [0-9a-f]"
     :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
    ["-p" "--punctuation" "Check for common punctuation [.,?!&-'\";:]"
     :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
    ["-s" "--symbol" "Check for symbols [`~!@#$%^&_-+*/=(){}[]|\\:;\"'<,>.?}]"
     :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
+   ["-i" "--stdin" "Get data from stdin instead of reading from a file"]
    ["-f" "--file FILEPATH" "Location of the file under test."
     :default nil
     :parse-fn str
@@ -74,7 +75,9 @@
   "Entrypoint, parses arguments, exits with any errors, provides args to main."
   [& args]
   (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
-    (when errors
-      (dorun (map println errors))
-      (System/exit 1))
-    (main (:characters options) (:file options))))
+    (cond
+      (:help options) (exit 0 summary)
+      errors (exit 1 (join "\n" errors))
+      (:stdin options) (main (:characters options) *in*)
+      :else (main (:characters options) (:file options)))))
+
