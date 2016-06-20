@@ -1,11 +1,21 @@
 # char-check
-Command line until to check that a given file has a given set of characters.
+```
+Usage: java -jar char-check.jar [OPTION]... [FILE]
+Check for the existence of character classes in FILE or standard input.
 
-Command line options include:
-* `-u` check for the existence of all uppercase characters [A-Z]
-* `-l` check for the existence of all lowercase characters [a-z]
-* `-n` check for the existence of all number characters [0-9]
-* `-f` (required) path to the file needing to be checked
+  -u, --upper        Check for uppercase letters [A-Z]
+  -l, --lower        Check for lowercase letters [a-z]
+  -n, --number       Check for numbers [0-9]
+  -6, --hex          Check for hexidecimal numbers [0-9a-f]
+  -p, --punctuation  Check for common punctuation [.,?!&-'";:]
+  -s, --symbol       Check for symbols [`~!@#$%^&_-+*/=(){}[]|\:;"'<,>.?}]
+  -h, --help
+With no FILE, read standard input.
+
+Examples:
+    java -jar char-check.jar -l test_file.txt
+    echo "abcdefghijklmnopqrstuvwxy" | java-jar char-check.jar -l
+```
 
 Please note that these can be combined... to check for existence of all classes in a file named `test.txt` the command line should look something like:
 ```
