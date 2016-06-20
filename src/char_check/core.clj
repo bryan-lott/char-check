@@ -75,7 +75,15 @@
 (defn -main
   "Entrypoint, parses arguments, exits with any errors, provides args to main."
   [& args]
-  (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
+  (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)
+        summary (str "Usage: java -jar char-check.jar [OPTION]... [FILE]\n"
+                     "Check for the existence of character classes in FILE or standard input.\n\n"
+                     summary
+                     "\nWith no FILE, read standard input.\n\n"
+                     "Examples:\n"
+                     "    java -jar char-check.jar -l test_file.txt\n"
+                     "    echo \"abcdefghijklmnopqrstuvwxy\" | java-jar char-check.jar -l")]
+    (println arguments)
     (cond
       (:help options) (exit 0 summary)
       errors (exit 1 (join "\n" errors))
