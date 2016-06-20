@@ -67,14 +67,9 @@
    ["-6" "--hex" "Check for hexidecimal numbers [0-9a-f]"
     :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
    ["-p" "--punctuation" "Check for common punctuation [.,?!&-'\";:]"
-    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
+    :assoc-fn (fn [m k _] (merge-with str m {:characters ".,?!&-'\";:"}))]
    ["-s" "--symbol" "Check for symbols [`~!@#$%^&_-+*/=(){}[]|\\:;\"'<,>.?}]"
-    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
-   ["-i" "--stdin" "Get data from stdin instead of reading from a file"]
-   ["-f" "--file FILEPATH" "Location of the file under test."
-    :default nil
-    :parse-fn str
-    :validate [#(.exists (as-file %)) "File does not exist!"]]
+    :assoc-fn (fn [m k _] (merge-with str m {:characters "`~!@#$%^&_-+*/=(){}[]|\\:;\"'<,>.?}"}))]
    ["-h" "--help"]])
 
 (defn -main
