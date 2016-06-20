@@ -40,14 +40,20 @@
       characters
       (recur (dissoc-from-test characters (process-line (first lines))) (rest lines)))))
 
-(defn main [characters in-file]
-  "Main function.  Opens the in-file and processes the file until all characters are found.
+(defn main
+  "Main function.  Calling without a file object results in reading from STDIN (*in*).
+  Otherwise, opens the in-file as a stream.
+  Processes the stream until all characters are found.
   Exits with number of characters not found."
-  (with-open [r (clojure.java.io/reader in-file)]
-    (let [chars-not-found (keys (run-file (str->test-map characters) (line-seq r)))]
-      (when (seq chars-not-found)
-        (exit (count chars-not-found) (str "Characters not found in file:\n" (join chars-not-found))))
-      (println "All characters (" characters ") found"))))
+  ([characters]
+   (main characters (java.io.BufferedReader. *in*)))
+  ([characters in-file]
+   (with-open [r in-file]
+     (let [chars-not-found (keys (run-file (str->test-map characters) (line-seq r)))]
+       (when (seq chars-not-found)
+         (exit (count chars-not-found) (str "Characters not found in file:\n" (join chars-not-found))))
+       (println "All characters (" characters ") found")))))
+
 
 
 
@@ -61,23 +67,27 @@
    ["-6" "--hex" "Check for hexidecimal numbers [0-9a-f]"
     :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
    ["-p" "--punctuation" "Check for common punctuation [.,?!&-'\";:]"
-    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
+    :assoc-fn (fn [m k _] (merge-with str m {:characters ".,?!&-'\";:"}))]
    ["-s" "--symbol" "Check for symbols [`~!@#$%^&_-+*/=(){}[]|\\:;\"'<,>.?}]"
-    :assoc-fn (fn [m k _] (merge-with str m {:characters "abcdef0123456789"}))]
-   ["-i" "--stdin" "Get data from stdin instead of reading from a file"]
-   ["-f" "--file FILEPATH" "Location of the file under test."
-    :default nil
-    :parse-fn str
-    :validate [#(.exists (as-file %)) "File does not exist!"]]
+    :assoc-fn (fn [m k _] (merge-with str m {:characters "`~!@#$%^&_-+*/=(){}[]|\\:;\"'<,>.?}"}))]
    ["-h" "--help"]])
 
 (defn -main
   "Entrypoint, parses arguments, exits with any errors, provides args to main."
   [& args]
-  (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)]
+  (let [{:keys [options arguments errors summary]} (parse-opts args cli-options)
+        summary (str "Usage: java -jar char-check.jar [OPTION]... [FILE]\n"
+                     "Check for the existence of character classes in FILE or standard input.\n\n"
+                     summary
+                     "\nWith no FILE, read standard input.\n\n"
+                     "Examples:\n"
+                     "    java -jar char-check.jar -l test_file.txt\n"
+                     "    echo \"abcdefghijklmnopqrstuvwxy\" | java-jar char-check.jar -l")]
+    (println arguments)
     (cond
       (:help options) (exit 0 summary)
       errors (exit 1 (join "\n" errors))
-      (:stdin options) (main (:characters options) *in*)
-      :else (main (:characters options) (:file options)))))
+      (empty? arguments) (main (:characters options))
+      :else (main (:characters options) (clojure.java.io/reader (first arguments))))))
+
 

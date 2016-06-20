@@ -1,4 +1,4 @@
-(defproject char-check "1.1.0-SNAPSHOT"
+(defproject char-check "1.1.1-SNAPSHOT"
   :description "Command line until to check that a given file has a given set of characters."
   :url "https://github.com/bryan-lott/char-check"
   :license {:name "MIT License"
