@@ -87,6 +87,7 @@
     (cond
       (:help options) (exit 0 summary)
       errors (exit 1 (join "\n" errors))
-      (:stdin options) (main (:characters options) *in*)
-      :else (main (:characters options) (:file options)))))
+      (empty? arguments) (main (:characters options))
+      :else (main (:characters options) (clojure.java.io/reader (first arguments))))))
+
 
