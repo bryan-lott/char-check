@@ -40,14 +40,20 @@
       characters
       (recur (dissoc-from-test characters (process-line (first lines))) (rest lines)))))
 
-(defn main [characters in-file]
-  "Main function.  Opens the in-file and processes the file until all characters are found.
+(defn main
+  "Main function.  Calling without a file object results in reading from STDIN (*in*).
+  Otherwise, opens the in-file as a stream.
+  Processes the stream until all characters are found.
   Exits with number of characters not found."
-  (with-open [r (clojure.java.io/reader in-file)]
-    (let [chars-not-found (keys (run-file (str->test-map characters) (line-seq r)))]
-      (when (seq chars-not-found)
-        (exit (count chars-not-found) (str "Characters not found in file:\n" (join chars-not-found))))
-      (println "All characters (" characters ") found"))))
+  ([characters]
+   (main characters (java.io.BufferedReader. *in*)))
+  ([characters in-file]
+   (with-open [r in-file]
+     (let [chars-not-found (keys (run-file (str->test-map characters) (line-seq r)))]
+       (when (seq chars-not-found)
+         (exit (count chars-not-found) (str "Characters not found in file:\n" (join chars-not-found))))
+       (println "All characters (" characters ") found")))))
+
 
 
 
