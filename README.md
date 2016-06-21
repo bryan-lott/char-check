@@ -1,4 +1,8 @@
 # char-check
+
+## Requirements
+* Java v1.7+
+
 ```
 Usage: java -jar char-check.jar [OPTION]... [FILE]
 Check for the existence of character classes in FILE or standard input.
@@ -17,7 +21,12 @@ Examples:
     echo "abcdefghijklmnopqrstuvwxy" | java-jar char-check.jar -l
 ```
 
-Please note that these can be combined... to check for existence of all classes in a file named `test.txt` the command line should look something like:
+Please note that these can be combined... to check for existence of upper and lowercase letters and digits in a file named `testdata.txt` the command line should look something like:
+```bash
+java -jar char-check.jar -uln testdata.txt
 ```
-java -jar char-check.jar -uln -f test.txt
+
+Alternatively for streaming from stdin:
+```bash
+cat testdata.txt | java -jar char-check.jar -uln
 ```
