@@ -19,7 +19,7 @@ With no FILE, read standard input.
 
 Examples:
     java -jar char-check.jar -l test_file.txt
-    echo "abcdefghijklmnopqrstuvwxy" | java-jar char-check.jar -l
+    echo "abcdefghijklmnopqrstuvwxy" | java -jar char-check.jar -l
 ```
 
 ## Examples
