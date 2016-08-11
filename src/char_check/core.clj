@@ -82,7 +82,7 @@
                      "\nWith no FILE, read standard input.\n\n"
                      "Examples:\n"
                      "    java -jar char-check.jar -l test_file.txt\n"
-                     "    echo \"abcdefghijklmnopqrstuvwxy\" | java-jar char-check.jar -l")]
+                     "    echo \"abcdefghijklmnopqrstuvwxy\" | java -jar char-check.jar -l")]
     (cond
       (:help options) (exit 0 summary)
       errors (exit 1 (join "\n" errors))
