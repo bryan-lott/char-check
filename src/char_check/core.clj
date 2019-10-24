@@ -1,10 +1,10 @@
 (ns char-check.core
   (:require
-    [taoensso.timbre :as log]
-    [taoensso.timbre.appenders.core :as appenders]
-    [clojure.tools.cli :refer [parse-opts]]
-    [clojure.java.io :refer [as-file]]
-    [clojure.string :refer [split join]])
+   [taoensso.timbre :as log]
+   [taoensso.timbre.appenders.core :as appenders]
+   [clojure.tools.cli :refer [parse-opts]]
+   [clojure.java.io :refer [as-file]]
+   [clojure.string :refer [split join]])
   (:gen-class))
 
 (defn exit
@@ -70,6 +70,8 @@
     :assoc-fn (fn [m k _] (merge-with str m {:characters ".,?!&-'\";:"}))]
    ["-s" "--symbol" "Check for symbols [`~!@#$%^&_-+*/=(){}[]|\\:;\"'<,>.?}]"
     :assoc-fn (fn [m k _] (merge-with str m {:characters "`~!@#$%^&_-+*/=(){}[]|\\:;\"'<,>.?}"}))]
+   ["-w" "--whitespace" "Check for whitespace, tabs, spaces, newlines"
+    :assoc-fn (fn [m k _] (merge-with str m {:characters (str \tab \newline \space \formfeed \return)}))]
    ["-h" "--help"]])
 
 (defn -main
