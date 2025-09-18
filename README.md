@@ -1,5 +1,11 @@
 # char-check
 
+## Problem Space
+
+Ever have a .csv file that's multiple terabytes in size? And have someone run an `awk` command on it to change a few things? AND have that `awk` command remove all of the `t`'s from the file?
+
+This Clojure script was designed as a backstop for those sorts of strange/interesting file problems by checking for the existence of a given set of characters and logging characters that weren't found!
+
 ## Requirements
 * Java v1.7+
 
